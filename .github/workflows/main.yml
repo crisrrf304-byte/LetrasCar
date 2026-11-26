@@ -1,0 +1,38 @@
+name: Compilar LetrasCar
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - run: xcodebuild -version
+      - run: brew install xcodegen
+      - run: xcodegen generate
+      - name: Compilar
+        run: |
+          xcodebuild -project LetrasCar.xcodeproj -target LetrasCar \
+            -configuration Release -sdk iphoneos \
+            SYMROOT="$PWD/build" CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
+      - name: Empaquetar IPA
+        run: |
+          mkdir -p Payload
+          cp -R build/Release-iphoneos/LetrasCar.app Payload/
+          zip -qry LetrasCar.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LetrasCar-ipa
+          path: LetrasCar.ipa
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: LetrasCar ${{ github.run_number }}
+          files: LetrasCar.ipa
