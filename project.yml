@@ -1,0 +1,50 @@
+name: LetrasCar
+options:
+  bundleIdPrefix: com.cristian
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGNING_ALLOWED: "NO"
+    CODE_SIGNING_REQUIRED: "NO"
+    CODE_SIGN_IDENTITY: ""
+    DEVELOPMENT_TEAM: ""
+targets:
+  LetrasCar:
+    type: application
+    platform: iOS
+    sources: [App, Shared]
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: LetrasCar
+        UILaunchScreen: {}
+        NSSupportsLiveActivities: true
+        UIBackgroundModes: [audio]
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        CFBundleURLTypes:
+          - CFBundleURLName: letrascar
+            CFBundleURLSchemes: [letrascar]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.cristian.letrascar
+        TARGETED_DEVICE_FAMILY: "1"
+    dependencies:
+      - target: LetrasWidget
+  LetrasWidget:
+    type: app-extension
+    platform: iOS
+    sources: [Widget, Shared]
+    info:
+      path: Widget/Info.plist
+      properties:
+        CFBundleDisplayName: Letras
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.cristian.letrascar.widget
+        TARGETED_DEVICE_FAMILY: "1"
